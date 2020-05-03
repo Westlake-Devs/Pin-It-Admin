@@ -1,0 +1,12 @@
+.message-render {
+    padding: 0px;
+    padding: 10px 10px 15px 10px;
+    background-color: #fff;
+}
+
+.message-render ul {
+    padding: 0px;
+    /* border: 1px #555 solid; */
+    padding: 0px;
+    list-style: none;
+}
