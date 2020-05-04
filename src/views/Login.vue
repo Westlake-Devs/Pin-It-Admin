@@ -25,12 +25,18 @@ export default {
   methods: {
     async login () {
       try {
+        const functions = firebase.functions()
         const provider = new firebase.auth.GoogleAuthProvider()
         const res = await firebase.auth().signInWithPopup(provider)
         console.log('user logged in')
         console.log(res)
+
+        console.log('requesting admin permissions')
+        var grantAdminPermissions = functions.httpsCallable('grantAdminPermissions')
+        const permRes = await grantAdminPermissions()
+        console.log(permRes)
       } catch (err) {
-        console.log('Error loggin in')
+        console.log('error while logging in and requesting permissions')
         console.log(err)
       }
     }
