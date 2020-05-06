@@ -21,7 +21,15 @@ export default {
   },
 
   async rejectPendingPost (post) {
-
+    try {
+      await firebase.firestore().doc(paths.pendingPosts + `${post.id}`).delete()
+      const refs = await firebase.storage().ref(paths.pendingAttachments + `users/${post.owner}/${post.id}`)
+      await (await refs.listAll()).items.forEach(async ref => {
+        await ref.delete()
+      })
+    } catch (err) {
+      console.log(`Error while deleting post ${post.id}: ${err}`)
+    }
   },
 
   async rejectPublicPost (post) {
