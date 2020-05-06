@@ -8,11 +8,11 @@ import manager from '@/api/firebase/post-manager.js'
 
 export default {
   async created () {
-    this.pendinPosts = await manager.fetchPendingPosts()
+    this.pendingPosts = await manager.fetchPendingPosts()
   },
   data () {
     return {
-      pendinPosts: null
+      pendingPosts: null
     }
   },
   methods: {
