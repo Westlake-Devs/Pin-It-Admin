@@ -1,19 +1,17 @@
 <template>
-    <div class="container">
-        <div v-if="currentUser">
-          <form class="general-form" @submit.prevent="logout">
-            <div class="form-item">You are logged in as admin user {{currentUser.displayName}}</div>
-            <div class="form-item"><button class="button-red" type="submit">Log Out</button></div>
-          </form>
-        </div>
-        <div v-else>
-          <form class="general-form" @submit.prevent="login">
-              <div class="form-item">Login to Access Admin Dashboard</div>
-              <div class="form-item"><button class="button" type="submit">Login</button></div>
-          </form>
-        </div>
-        <div v-if="error" class="error">{{error}}</div>
-    </div>
+  <v-content>
+    <v-container fluid fill-height>
+      <v-layout align-center justify-center>
+        <v-flex xs12 sm8 md4>
+          <v-card class="elevation-12">
+            <v-card-actions class = "justify-center">
+              <v-btn color="primary">Login</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-content>
 </template>
 
 <script>
