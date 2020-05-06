@@ -4,13 +4,15 @@
 </template>
 
 <script>
+import manager from '@/api/firebase/post-manager.js'
 
 export default {
+  async created () {
+    this.pendinPosts = await manager.fetchPendingPosts()
+  },
   data () {
     return {
-      email: null,
-      password: null,
-      error: null
+      pendinPosts: null
     }
   },
   methods: {
