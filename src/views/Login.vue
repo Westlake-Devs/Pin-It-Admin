@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class="elevation-12">
             <v-card-actions class = "justify-center">
-              <v-btn color="primary">Login</v-btn>
+              <v-btn color="primary" @click="login">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
