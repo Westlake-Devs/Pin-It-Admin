@@ -39,6 +39,7 @@ export default {
 
   async approvePendingPost (post) {
     moveFirestoreDoc(`${paths.pendingPosts}${post.id}`, `${paths.publicPosts}${post.id}`)
+    if (post.action === 'edit') { return }
     moveStorageCollectionContent(`${paths.pendingAttachments}users/${post.owner}/${post.id}`, `${paths.publicAttachments}users/${post.owner}/${post.id}`)
   },
 
