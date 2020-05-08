@@ -1,21 +1,30 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout align-center justify-center>
-      <v-flex xs12 sm8 md4>
-        <v-card class="elevation-12">
-          <v-toolbar color="#4abdac" dark flat>
-            <v-toolbar-title>Pins</v-toolbar-title>
-          </v-toolbar>
-          <v-card-actions class = "justify-center">
-            <v-btn @click="goback" color="#f7b733" style = "color:white">Back</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn @click="gonext" color="#f7b733" style = "color:white">Next</v-btn>
-          </v-card-actions>
-          <br>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <panel title="Recently Viewed Songs">
+    <v-data-table
+      :headers="headers"
+      :sort-by="[date]"
+      :sort-desc="[true]"
+      :items="pins">
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="viewMore(item)"
+        >
+          mdi-clipboard-account
+        </v-icon>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
+      <template v-slot:item.visible="{ item }">
+        <v-simple-checkbox v-model="item.glutenfree"></v-simple-checkbox>
+      </template>
+    </v-data-table>
+  </panel>
 </template>
 
 <script>
@@ -27,13 +36,42 @@ export default {
   },
   data () {
     return {
+      headers: [
+        {
+          text: 'Title',
+          value: 'title',
+          sortable: false
+        },
+        {
+          text: 'Date',
+          value: 'date'
+        },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false
+        },
+        {
+          text: 'Visibility',
+          value: 'visible',
+          sortable: false
+        }
+      ],
+      pins: [
+        {
+          title: 'sssssss',
+          date: 'sksksksksk'
+        }
+      ],
       pendingPosts: null
     }
   },
   methods: {
-    goback () {
+    viewMore (item) {
+
     },
-    gonext () {
+    deleteItem (item) {
+
     }
   }
 }

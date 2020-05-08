@@ -7,12 +7,11 @@
         </v-layout>
       </v-row>
     </div>
-
     <v-row>
       <v-layout align-center justify-center>
         <v-card class="elevation-12">
           <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>Login To Pin It Auditor</v-toolbar-title>
+            <v-toolbar-title>Sign In To View Auditor</v-toolbar-title>
           </v-toolbar>
           <br>
           <v-card-actions class = "justify-center">
