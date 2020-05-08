@@ -1,8 +1,7 @@
 <template>
-  <panel title="Recently Viewed Songs">
     <v-data-table
       :headers="headers"
-      :sort-by="[date]"
+      sort-by="date"
       :sort-desc="[true]"
       :items="pins">
       <template v-slot:item.actions="{ item }">
@@ -13,18 +12,11 @@
         >
           mdi-clipboard-account
         </v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
-        >
-          mdi-delete
-        </v-icon>
       </template>
       <template v-slot:item.visible="{ item }">
-        <v-simple-checkbox v-model="item.glutenfree"></v-simple-checkbox>
+        <v-checkbox v-model="item.visible" disabled></v-checkbox>
       </template>
     </v-data-table>
-  </panel>
 </template>
 
 <script>
@@ -60,7 +52,8 @@ export default {
       pins: [
         {
           title: 'sssssss',
-          date: 'sksksksksk'
+          date: 'sksksksksk',
+          visible: true
         }
       ],
       pendingPosts: null
@@ -68,10 +61,12 @@ export default {
   },
   methods: {
     viewMore (item) {
-
+      console.log(item.title)
     },
     deleteItem (item) {
-
+    },
+    toggleVisibility (item) {
+      console.log(item.visible)
     }
   }
 }
