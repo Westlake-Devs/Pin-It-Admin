@@ -1,29 +1,27 @@
 <template>
   <v-container fluid fill-height>
-    <div v-if="error">
-      <v-row>
-        <v-layout align-center justify-center>
-          <v-alert dismissible type="error" :value = "error">{{ error }}</v-alert>
-        </v-layout>
-      </v-row>
-    </div>
-    <v-row>
-      <v-layout align-center justify-center>
-        <v-card class="elevation-12">
-          <v-toolbar color="primary" dark flat>
-            <v-toolbar-title>Sign In To View Auditor</v-toolbar-title>
-          </v-toolbar>
-          <br>
-          <v-card-actions class = "justify-center">
-            <v-btn depressed @click="login" class="info white--text">
-              <v-icon left>email</v-icon>
-              Login
-            </v-btn>
-          </v-card-actions>
-          <br>
-        </v-card>
-      </v-layout>
-    </v-row>
+    <v-snackbar v-model="snackbar" color="error" :timeout="9000" top>
+      <span>{{ error }}</span>
+      <v-btn color="error white--text" depressed @click="snackbar = false">
+        close
+      </v-btn>
+    </v-snackbar>
+
+    <v-layout align-center justify-center>
+      <v-card class="elevation-12">
+        <v-toolbar color="primary" dark flat>
+          <v-toolbar-title>Sign In To View Auditor</v-toolbar-title>
+        </v-toolbar>
+        <br>
+        <v-card-actions class = "justify-center">
+          <v-btn depressed @click="login" class="info white--text">
+            <v-icon left>email</v-icon>
+            <span>Login</span>
+          </v-btn>
+        </v-card-actions>
+        <br>
+      </v-card>
+    </v-layout>
   </v-container>
 </template>
 
@@ -35,7 +33,8 @@ export default {
   data () {
     return {
       error: null,
-      currentUser: null
+      currentUser: null,
+      snackbar: false
     }
   },
   methods: {
@@ -56,8 +55,10 @@ export default {
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)
+        if (err.code.includes('auth')) { return }
         await this.logout()
         this.error = err
+        this.snackbar = true
       }
     },
     async logout () {
