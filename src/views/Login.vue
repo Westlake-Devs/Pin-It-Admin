@@ -7,6 +7,13 @@
       </v-btn>
     </v-snackbar>
 
+    <v-snackbar v-model="currentUser" color="success" :timeout="3000" top>
+      <span>User logged in with admin permissions.</span>
+      <v-btn color="success white--text" depressed @click="snackbar = false">
+        close
+      </v-btn>
+    </v-snackbar>
+
     <v-layout align-center justify-center>
       <v-card class="elevation-12">
         <v-toolbar color="primary" dark flat>
@@ -14,7 +21,7 @@
         </v-toolbar>
         <br>
         <v-card-actions class = "justify-center">
-          <v-btn depressed @click="login" class="info white--text">
+          <v-btn depressed @click="login" class="info white--text" :loading="loggingIn">
             <v-icon left>email</v-icon>
             <span>Login</span>
           </v-btn>
@@ -34,12 +41,15 @@ export default {
     return {
       error: null,
       currentUser: null,
-      snackbar: false
+      snackbar: false,
+      loggingIn: false
     }
   },
   methods: {
     async login () {
       try {
+        this.loggingIn = true
+
         const functions = firebase.functions()
         const provider = new firebase.auth.GoogleAuthProvider()
         const res = await firebase.auth().signInWithPopup(provider)
@@ -59,6 +69,8 @@ export default {
         await this.logout()
         this.error = err
         this.snackbar = true
+      } finally {
+        this.loggingIn = false
       }
     },
     async logout () {
