@@ -3,8 +3,8 @@
       :headers="headers"
       sort-by="date"
       :sort-desc="[true]"
-      :items="pins">
-      <template v-slot:item.actions="{ item }">
+      :items="pendingPosts">
+      <template v-slot:item.view="{ item }">
         <v-icon
           small
           class="mr-2"
@@ -13,8 +13,23 @@
           mdi-clipboard-account
         </v-icon>
       </template>
-      <template v-slot:item.visible="{ item }">
-        <v-checkbox v-model="item.visible" disabled></v-checkbox>
+      <template v-slot:item.approve="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="approve(item)"
+        >
+          mdi-check
+        </v-icon>
+      </template>
+      <template v-slot:item.delete="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="deleteItem(item)"
+        >
+          mdi-trash-can-outline
+        </v-icon>
       </template>
     </v-data-table>
 </template>
@@ -36,37 +51,44 @@ export default {
         },
         {
           text: 'Date',
-          value: 'date'
+          value: 'timestamp.seconds'
         },
         {
-          text: 'Actions',
-          value: 'actions',
+          text: 'View More',
+          value: 'view',
           sortable: false
         },
         {
-          text: 'Visibility',
-          value: 'visible',
+          text: 'Approve',
+          value: 'approve',
+          sortable: false
+        },
+        {
+          text: 'Delete',
+          value: 'delete',
           sortable: false
         }
       ],
       pins: [
         {
           title: 'sssssss',
-          date: 'sksksksksk',
-          visible: true
+          timestamp: {
+            seconds: 'sksksksksk'
+          }
         }
       ],
-      pendingPosts: null
+      pendingPosts: [
+      ]
     }
   },
   methods: {
     viewMore (item) {
-      console.log(item.title)
     },
     deleteItem (item) {
+      manager.rejectPendingPost(item)
     },
-    toggleVisibility (item) {
-      console.log(item.visible)
+    approve (item) {
+      manager.approvePendingPost(item)
     }
   }
 }
