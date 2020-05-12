@@ -34,7 +34,6 @@
 
 <script>
 import firebase from 'firebase'
-import auditor from '@/views/Audit.vue'
 require('@/assets/styles/forms.css')
 
 export default {
@@ -63,7 +62,6 @@ export default {
         console.log(permRes)
         this.error = null
         this.currentUser = firebase.auth().currentUser
-        auditor.created()
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)

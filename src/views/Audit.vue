@@ -86,9 +86,13 @@ export default {
     },
     deleteItem (item) {
       manager.rejectPendingPost(item)
+      const index = this.pendingPosts.indexOf(item)
+      this.pendingPosts.splice(index, 1)
     },
     approve (item) {
       manager.approvePendingPost(item)
+      const index = this.pendingPosts.indexOf(item)
+      this.pendingPosts.splice(index, 1)
     }
   }
 }
