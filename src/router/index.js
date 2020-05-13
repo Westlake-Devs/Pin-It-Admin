@@ -4,10 +4,16 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Audit from '../views/Audit.vue'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'Root',
+    redirect: '/auditor'
+  },
   {
     path: '/unuseddeletesoon',
     name: 'Home',
@@ -19,19 +25,27 @@ const routes = [
     component: About
   },
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
   {
     path: '/auditor',
     name: 'Auditor',
-    component: Audit
+    component: Audit,
+    meta: { requiresAuth: true }
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+// prevent unauthenticated users from accessing pages requiring authorization
+router.beforeEach((to, from, next) => {
+  const reqAuth = to.matched.some(record => record.meta.requiresAuth)
+  if (!firebase.auth().currentUser && reqAuth) next('/login')
+  else next()
 })
 
 export default router
