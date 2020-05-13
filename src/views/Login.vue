@@ -64,6 +64,8 @@ export default {
         this.error = null
         this.currentUser = firebase.auth().currentUser
         this.successSnackbar = true
+
+        this.$router.replace({ name: 'Auditor' })
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)
