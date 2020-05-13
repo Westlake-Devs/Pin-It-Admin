@@ -7,9 +7,9 @@
       </v-btn>
     </v-snackbar>
 
-    <v-snackbar v-model="currentUser" color="success" :timeout="3000" top>
+    <v-snackbar v-model="successSnackbar" color="success" :timeout="3000" top>
       <span>User logged in with admin permissions.</span>
-      <v-btn color="success white--text" depressed @click="snackbar = false">
+      <v-btn color="success white--text" depressed @click="successSnackbar = false">
         close
       </v-btn>
     </v-snackbar>
@@ -42,6 +42,7 @@ export default {
       error: null,
       currentUser: null,
       snackbar: false,
+      successSnackbar: false,
       loggingIn: false
     }
   },
@@ -62,6 +63,7 @@ export default {
         console.log(permRes)
         this.error = null
         this.currentUser = firebase.auth().currentUser
+        this.successSnackbar = true
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)
