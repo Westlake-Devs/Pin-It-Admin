@@ -15,19 +15,23 @@
     </v-snackbar>
 
     <v-layout align-center justify-center>
-      <v-card class="elevation-12">
-        <v-toolbar color="primary" dark flat>
-          <v-toolbar-title>Sign In To View Auditor</v-toolbar-title>
-        </v-toolbar>
-        <br>
-        <v-card-actions class = "justify-center">
-          <v-btn depressed @click="login" class="info white--text" :loading="loggingIn">
-            <v-icon left>email</v-icon>
-            <span>Login</span>
-          </v-btn>
-        </v-card-actions>
-        <br>
-      </v-card>
+      <v-flex xs12 sm8 md5>
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-spacer />
+            <v-toolbar-title>Sign In To Audit</v-toolbar-title>
+            <v-spacer />
+          </v-toolbar>
+          <br>
+          <v-card-actions class = "justify-center">
+            <v-btn depressed @click="login" class="info white--text" :loading="loggingIn">
+              <v-icon left>email</v-icon>
+              <span>Login</span>
+            </v-btn>
+          </v-card-actions>
+          <br>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
