@@ -5,6 +5,7 @@ import store from './store'
 import firebase from 'firebase'
 import firebaseConfig from './firebase/firebaseConfig.js'
 import vuetify from './plugins/vuetify'
+import vuex from 'vuex'
 
 // init firebase
 firebase.initializeApp(firebaseConfig)
@@ -15,5 +16,6 @@ new Vue({
   router,
   store,
   vuetify,
+  vuex,
   render: h => h(App)
 }).$mount('#app')

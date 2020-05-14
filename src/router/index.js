@@ -42,10 +42,13 @@ const router = new VueRouter({
 })
 
 // prevent unauthenticated users from accessing pages requiring authorization
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  console.log(firebase.auth().currentUser)
+  console.log('user')
   const reqAuth = to.matched.some(record => record.meta.requiresAuth)
-  if (!firebase.auth().currentUser && reqAuth) next('/login')
-  else next()
+  if (!(await firebase.auth().currentUser) && reqAuth) {
+    next('/login')
+  } else next()
 })
 
 export default router
