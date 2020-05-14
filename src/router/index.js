@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Audit from '../views/Audit.vue'
-import firebase from 'firebase'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -43,10 +43,10 @@ const router = new VueRouter({
 
 // prevent unauthenticated users from accessing pages requiring authorization
 router.beforeEach(async (to, from, next) => {
-  console.log(firebase.auth().currentUser)
-  console.log('user')
+  console.log('direct')
+  console.log(store.state.currentUser)
   const reqAuth = to.matched.some(record => record.meta.requiresAuth)
-  if (!(await firebase.auth().currentUser) && reqAuth) {
+  if (!(store.state.currentUser) && reqAuth) {
     next('/login')
   } else next()
 })
