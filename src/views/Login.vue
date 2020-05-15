@@ -1,13 +1,13 @@
 <template>
   <v-container fluid fill-height>
-    <v-snackbar v-model="snackbar" color="error" :timeout="9000" top>
+    <v-snackbar v-model="snackbar" color="error" :timeout="9000" buttom>
       <span>{{ error }}</span>
       <v-btn color="error white--text" depressed @click="snackbar = false">
         close
       </v-btn>
     </v-snackbar>
 
-    <v-snackbar v-model="successSnackbar" color="success" :timeout="3000" top>
+    <v-snackbar v-model="successSnackbar" color="success" :timeout="3000" buttom>
       <span>User logged in with admin permissions.</span>
       <v-btn color="success white--text" depressed @click="successSnackbar = false">
         close
@@ -44,10 +44,19 @@ export default {
   data () {
     return {
       error: null,
-      currentUser: null,
       snackbar: false,
       successSnackbar: false,
       loggingIn: false
+    }
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.currentUser
+    }
+  },
+  watch: {
+    currentUser: async function (val) {
+      if (val) this.$router.push({ name: 'Auditor' })
     }
   },
   methods: {
@@ -66,10 +75,8 @@ export default {
         const permRes = await grantAdminPermissions()
         console.log(permRes)
         this.error = null
-        this.currentUser = firebase.auth().currentUser
         this.successSnackbar = true
-
-        this.$router.replace({ name: 'Auditor' })
+        this.loggingIn = false
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)
@@ -83,7 +90,6 @@ export default {
     },
     async logout () {
       await firebase.auth().signOut()
-      this.currentUser = null
       this.error = null
     }
   }
