@@ -58,8 +58,7 @@
             longitude: {{ item.userLong }}
           </v-card-subtitle>
           <v-card-title>Images</v-card-title>
-          <v-img v-for="img in previewImagesOf(item)" :src="img" :key="img" max-width="300" contain>
-          </v-img>
+          <PostImages :post='item'></PostImages>
         </v-card>
         <br/>
       </td>
@@ -70,11 +69,13 @@
 
 <script>
 import manager from '@/api/firebase/post-manager.js'
+import PostImages from '@/components/PostImages.vue'
 
 export default {
   async created () {
     await this.loadPosts()
   },
+  components: { PostImages },
   data () {
     return {
       loading: false,
@@ -108,15 +109,6 @@ export default {
       this.loading = true
       this.pendingPosts = await manager.fetchPendingPosts()
       this.loading = false
-    },
-    previewImagesOf (item) {
-      const urls = manager.fetechPostImageURLs(item)
-      console.log('showing')
-      console.log(urls)
-      return urls
-      // const arr = ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg']
-      // console.log(arr)
-      // return arr
     },
     deleteItem (item) {
       manager.rejectPendingPost(item)
