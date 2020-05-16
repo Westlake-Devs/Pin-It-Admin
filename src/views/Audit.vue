@@ -11,7 +11,7 @@
       <v-toolbar flat>
         <v-toolbar-title>Pending User Posts</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn depressed class="tertiary" @click="loadPosts()">
+        <v-btn depressed class="tertiary" @click="loadPosts()" :loading="loading">
             <span>refresh</span>
             <v-icon right>loop</v-icon>
         </v-btn>
@@ -51,6 +51,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       headers: [
         {
           text: 'Title',
@@ -77,7 +78,9 @@ export default {
   },
   methods: {
     async loadPosts () {
+      this.loading = true
       this.pendingPosts = await manager.fetchPendingPosts()
+      this.loading = false
     },
     viewMore (item) {
     },

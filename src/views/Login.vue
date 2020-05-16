@@ -1,13 +1,13 @@
 <template>
   <v-container fluid fill-height>
-    <v-snackbar v-model="snackbar" color="error" :timeout="9000" buttom>
+    <v-snackbar v-model="snackbar" color="error" :timeout="9000" bottom>
       <span>{{ error }}</span>
       <v-btn color="error white--text" depressed @click="snackbar = false">
         close
       </v-btn>
     </v-snackbar>
 
-    <v-snackbar v-model="successSnackbar" color="success" :timeout="3000" buttom>
+    <v-snackbar v-model="successSnackbar" color="success" :timeout="3000" bottom>
       <span>User logged in with admin permissions.</span>
       <v-btn color="success white--text" depressed @click="successSnackbar = false">
         close
