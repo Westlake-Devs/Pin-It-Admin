@@ -1,7 +1,22 @@
 <template>
-  <div>
-    <v-img v-for="img in urls" :src="img" :key="img" max-width="300" contain></v-img>
-  </div>
+  <v-card
+    outlined=""
+    max-width="400"
+    :loading="!urls"
+    class="grey lighten-3"
+  >
+    <v-carousel>
+      <v-carousel-item
+        v-for="(item,i) in urls"
+        :key="i"
+        :src="item"
+        cycle
+        hide-delimiter-background
+        show-arrows-on-hover
+        contain
+      ></v-carousel-item>
+    </v-carousel>
+  </v-card>
 </template>
 
 <script>
@@ -21,8 +36,6 @@ export default {
   methods: {
     async previewImagesOf (post) {
       this.urls = await manager.fetechPostImageURLs(post)
-      console.log('images loaded')
-      console.log(this.urls)
     }
   }
 }

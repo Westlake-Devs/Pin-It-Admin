@@ -7,6 +7,7 @@
     show-expand
     class="elevation-1"
   >
+
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Pending User Posts</v-toolbar-title>
@@ -58,7 +59,9 @@
             longitude: {{ item.userLong }}
           </v-card-subtitle>
           <v-card-title>Images</v-card-title>
-          <PostImages :post='item'></PostImages>
+          <v-card-subtitle>
+            <PostImages :post='item'></PostImages>
+          </v-card-subtitle>
         </v-card>
         <br/>
       </td>
