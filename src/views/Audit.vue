@@ -39,14 +39,29 @@
 
     <template v-slot:expanded-item="{ headers, item }">
       <td :colspan="headers.length">
-        <br />
-        <v-card flat>
-          <div v-for="(value, propertyName) in item" :key="propertyName">
-            <v-card-title> {{ propertyName }} </v-card-title>
-            <v-card-subtitle> {{ value }} </v-card-subtitle>
-          </div>
+        <br/>
+        <v-card flat outlined>
+          <v-card-title>Author</v-card-title>
+          <v-card-subtitle>
+            name: {{ item.userName }}<br/>
+            uid: {{ item.owner }}
+          </v-card-subtitle>
+          <v-card-title>Post</v-card-title>
+          <v-card-subtitle>
+            action: {{ item.action }}<br/>
+            title: {{ item.title }}<br/>
+            description: {{ item.description }}
+          </v-card-subtitle>
+          <v-card-title>Post Coordinates</v-card-title>
+          <v-card-subtitle>
+            latitude: {{ item.userLat }}<br/>
+            longitude: {{ item.userLong }}
+          </v-card-subtitle>
+          <v-card-title>Images</v-card-title>
+          <v-img v-for="img in previewImagesOf(item)" :src="img" :key="img" max-width="300" contain>
+          </v-img>
         </v-card>
-        <br />
+        <br/>
       </td>
     </template>
 
@@ -63,6 +78,7 @@ export default {
   data () {
     return {
       loading: false,
+      images: ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'],
       headers: [
         {
           text: 'Title',
@@ -93,7 +109,14 @@ export default {
       this.pendingPosts = await manager.fetchPendingPosts()
       this.loading = false
     },
-    viewMore (item) {
+    previewImagesOf (item) {
+      const urls = manager.fetechPostImageURLs(item)
+      console.log('showing')
+      console.log(urls)
+      return urls
+      // const arr = ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg']
+      // console.log(arr)
+      // return arr
     },
     deleteItem (item) {
       manager.rejectPendingPost(item)
