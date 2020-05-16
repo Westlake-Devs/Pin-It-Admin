@@ -36,9 +36,20 @@
         mdi-trash-can-outline
       </v-icon>
     </template>
+
     <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length">More info about {{ item.title }}</td>
+      <td :colspan="headers.length">
+        <br />
+        <v-card flat>
+          <div v-for="(value, propertyName) in item" :key="propertyName">
+            <v-card-title> {{ propertyName }} </v-card-title>
+            <v-card-subtitle> {{ value }} </v-card-subtitle>
+          </div>
+        </v-card>
+        <br />
+      </td>
     </template>
+
   </v-data-table>
 </template>
 
