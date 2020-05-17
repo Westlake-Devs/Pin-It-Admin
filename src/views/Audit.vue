@@ -42,26 +42,26 @@
       <td :colspan="headers.length">
         <br/>
         <v-card flat outlined>
-          <v-card-title>Author</v-card-title>
+          <v-card-title>
+            Pending Action
+          </v-card-title>
           <v-card-subtitle>
-            name: {{ item.userName }}<br/>
-            uid: {{ item.owner }}
+            User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
+            The following will become public if approved.
           </v-card-subtitle>
-          <v-card-title>Post</v-card-title>
+          <v-card-title>Post Details</v-card-title>
           <v-card-subtitle>
-            action: {{ item.action }}<br/>
             title: {{ item.title }}<br/>
-            description: {{ item.description }}
+            author: {{ item.userName }}<br/>
+            description: {{ item.description }}<br/>
+            coordinates: <a :href="mapsURL(item.userLat, item.userLong)" target="_blank">({{ item.userLat }}, {{ item.userLong }})</a><br/>
           </v-card-subtitle>
-          <v-card-title>Post Coordinates</v-card-title>
-          <v-card-subtitle>
-            latitude: {{ item.userLat }}<br/>
-            longitude: {{ item.userLong }}
-          </v-card-subtitle>
-          <v-card-title>Images</v-card-title>
-          <v-card-subtitle>
-            <PostImages :post='item'></PostImages>
-          </v-card-subtitle>
+          <div v-if="item.action != 'edit'">
+            <v-card-title>Post Images</v-card-title>
+            <v-card-subtitle>
+              <PostImages :post='item'></PostImages>
+            </v-card-subtitle>
+          </div>
         </v-card>
         <br/>
       </td>
@@ -112,6 +112,9 @@ export default {
       this.loading = true
       this.pendingPosts = await manager.fetchPendingPosts()
       this.loading = false
+    },
+    mapsURL (lat, long) {
+      return `https://www.google.com/maps/search/?api=1&query=${lat},${long}`
     },
     deleteItem (item) {
       manager.rejectPendingPost(item)

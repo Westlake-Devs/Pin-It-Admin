@@ -24,8 +24,8 @@ const onAuthorizationStatusChanged = user => {
 }
 
 firebase.auth().onAuthStateChanged(async user => {
-  console.log('Auth state change, user is:')
-  console.log(user)
+  // console.log('Auth state change, user is:')
+  // console.log(user)
 
   try {
     // if user is unauthorized, we don't want to do anything
