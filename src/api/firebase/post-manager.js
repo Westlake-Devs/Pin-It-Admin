@@ -1,9 +1,33 @@
 import firebase from 'firebase'
 import paths from './paths'
 
+class PostManagerError extends Error {
+  constructor (message) {
+    super(message)
+    this.type = 'PostManagerError'
+  }
+}
+
 async function moveFirestoreDoc (from, to) {
-  const ref = await firebase.firestore().doc(from).get()
-  const dat = ref.data()
+  console.log(`move ${from} -> ${to}`)
+
+  const snapshot = await firebase.firestore().doc(from).get()
+  if (!snapshot.exists) throw new PostManagerError('This post is no longer pending, it may have been approved or deleted by another admin.')
+
+  const dat = snapshot.data()
+  await firebase.firestore().doc(from).delete()
+  await firebase.firestore().doc(to).set(dat)
+}
+
+async function overwriteFirestoreDoc (from, to) {
+  console.log(`overwrite ${from} -> ${to}`)
+
+  const toSnapshot = await firebase.firestore().doc(to).get()
+  const fromSnapshot = await firebase.firestore().doc(from).get()
+  if (!toSnapshot.exists) throw new PostManagerError('This edit is no longer pending, the original post has been deleted either by the user or an admin.')
+  if (!fromSnapshot.exists) throw new PostManagerError('This edit is no longer pending, it may have been approved or deleted by another admin.')
+
+  const dat = fromSnapshot.data()
   await firebase.firestore().doc(from).delete()
   await firebase.firestore().doc(to).set(dat)
 }
@@ -42,9 +66,11 @@ export default {
   },
 
   async approvePendingPost (post) {
-    moveFirestoreDoc(`${paths.pendingPosts}${post.id}`, `${paths.publicPosts}${post.id}`)
-    if (post.action === 'edit') { return }
-    moveStorageCollectionContent(`${paths.pendingAttachments}users/${post.owner}/${post.id}`, `${paths.publicAttachments}users/${post.owner}/${post.id}`)
+    if (post.action === 'edit') await overwriteFirestoreDoc(`${paths.pendingPosts}${post.id}`, `${paths.publicPosts}${post.id}`)
+    else {
+      await moveFirestoreDoc(`${paths.pendingPosts}${post.id}`, `${paths.publicPosts}${post.id}`)
+      await moveStorageCollectionContent(`${paths.pendingAttachments}users/${post.owner}/${post.id}`, `${paths.publicAttachments}users/${post.owner}/${post.id}`)
+    }
   },
 
   async rejectPendingPost (post) {

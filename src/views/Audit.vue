@@ -93,7 +93,8 @@ export default {
     return {
       loading: false,
       search: null,
-      images: ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'],
+      warningDialog: false,
+      error: null,
       headers: [
         {
           text: 'Title',
@@ -127,15 +128,29 @@ export default {
     mapsURL (lat, long) {
       return `https://www.google.com/maps/search/?api=1&query=${lat},${long}`
     },
-    async deleteItem (item) {
-      await manager.rejectPendingPost(item)
+    removeFromRenderedList (item) {
       const index = this.pendingPosts.indexOf(item)
       this.pendingPosts.splice(index, 1)
     },
+    async processItem (item, callback) {
+      try {
+        await callback(item)
+        this.removeFromRenderedList(item)
+      } catch (err) {
+        this.error = err
+        this.warningDialog = true
+        if (err.type === 'PostManagerError') {
+          this.removeFromRenderedList(item)
+        }
+        console.log(`Error, actions to this post could not be accomplished ${err}`)
+        console.log(err)
+      }
+    },
+    async deleteItem (item) {
+      await this.processItem(item, manager.rejectPendingPost)
+    },
     async approve (item) {
-      await manager.approvePendingPost(item)
-      const index = this.pendingPosts.indexOf(item)
-      this.pendingPosts.splice(index, 1)
+      await this.processItem(item, manager.approvePendingPost)
     }
   }
 }
