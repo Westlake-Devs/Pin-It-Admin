@@ -3,7 +3,7 @@
     :headers="headers"
     :sort-desc="[true]"
     :items="pendingPosts"
-    sort-by="date"
+    :search="search"
     show-expand
     class="elevation-1"
   >
@@ -11,11 +11,20 @@
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>Pending User Posts</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer/>
         <v-btn depressed class="tertiary" @click="loadPosts()" :loading="loading">
             <span>refresh</span>
             <v-icon right>loop</v-icon>
         </v-btn>
+      </v-toolbar>
+      <v-toolbar flat>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
       </v-toolbar>
     </template>
 
@@ -83,6 +92,7 @@ export default {
   data () {
     return {
       loading: false,
+      search: null,
       images: ['https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg'],
       headers: [
         {
