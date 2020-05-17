@@ -1,83 +1,109 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :sort-desc="[true]"
-    :items="pendingPosts"
-    :search="search"
-    show-expand
-    class="elevation-1"
-  >
+  <div>
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <v-card class = "info white--text">
+        <v-card-title>
+          Item Unavailable
+        </v-card-title>
+        <v-card-text class = "white--text">
+          {{ error }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="white"
+            outlined
+            @click="dialog = false"
+          >
+            Ok
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>Pending User Posts</v-toolbar-title>
-        <v-spacer/>
-        <v-btn depressed class="tertiary" @click="loadPosts()" :loading="loading">
-            <span>refresh</span>
-            <v-icon right>loop</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-toolbar flat>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-toolbar>
-    </template>
+    <v-data-table
+      :headers="headers"
+      :sort-desc="[true]"
+      :items="pendingPosts"
+      :search="search"
+      show-expand
+      class="elevation-1"
+    >
 
-    <template v-slot:item.approve="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="approve(item)"
-      >
-        mdi-check
-      </v-icon>
-    </template>
-    <template v-slot:item.delete="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="deleteItem(item)"
-      >
-        mdi-trash-can-outline
-      </v-icon>
-    </template>
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Pending User Posts</v-toolbar-title>
+          <v-spacer/>
+          <v-btn depressed class="tertiary" @click="loadPosts()" :loading="loading">
+              <span>refresh</span>
+              <v-icon right>loop</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-toolbar flat>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
+        </v-toolbar>
+      </template>
 
-    <template v-slot:expanded-item="{ headers, item }">
-      <td :colspan="headers.length">
-        <br/>
-        <v-card flat outlined>
-          <v-card-title>
-            Pending Action: {{ item.action.toUpperCase() }}
-          </v-card-title>
-          <v-card-subtitle>
-            User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
-            The following will become public if approved.
-          </v-card-subtitle>
-          <v-divider/>
-          <v-card-title>Post Details</v-card-title>
-          <v-card-subtitle>
-            title: {{ item.title }}<br/>
-            author: {{ item.userName }}<br/>
-            description: {{ item.description }}<br/>
-            coordinates: <a :href="mapsURL(item.userLat, item.userLong)" target="_blank">({{ item.userLat }}, {{ item.userLong }})</a><br/>
-          </v-card-subtitle>
-          <div v-if="item.action != 'edit'">
-            <v-card-title>Post Images</v-card-title>
+      <template v-slot:item.approve="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="approve(item)"
+        >
+          mdi-check
+        </v-icon>
+      </template>
+      <template v-slot:item.delete="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          @click="deleteItem(item)"
+        >
+          mdi-trash-can-outline
+        </v-icon>
+      </template>
+
+      <template v-slot:expanded-item="{ headers, item }">
+        <td :colspan="headers.length">
+          <br/>
+          <v-card flat outlined>
+            <v-card-title>
+              Pending Action: {{ item.action.toUpperCase() }}
+            </v-card-title>
             <v-card-subtitle>
-              <PostImages :post="item"></PostImages>
+              User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
+              The following will become public if approved.
             </v-card-subtitle>
-          </div>
-        </v-card>
-        <br/>
-      </td>
-    </template>
+            <v-divider/>
+            <v-card-title>Post Details</v-card-title>
+            <v-card-subtitle>
+              title: {{ item.title }}<br/>
+              author: {{ item.userName }}<br/>
+              description: {{ item.description }}<br/>
+              coordinates: <a :href="mapsURL(item.userLat, item.userLong)" target="_blank">({{ item.userLat }}, {{ item.userLong }})</a><br/>
+            </v-card-subtitle>
+            <div v-if="item.action != 'edit'">
+              <v-card-title>Post Images</v-card-title>
+              <v-card-subtitle>
+                <PostImages :post="item"></PostImages>
+              </v-card-subtitle>
+            </div>
+          </v-card>
+          <br/>
+        </td>
+      </template>
 
-  </v-data-table>
+    </v-data-table>
+  </div>
 </template>
 
 <script>
@@ -93,7 +119,7 @@ export default {
     return {
       loading: false,
       search: null,
-      warningDialog: false,
+      dialog: false,
       error: null,
       headers: [
         {
@@ -137,8 +163,8 @@ export default {
         await callback(item)
         this.removeFromRenderedList(item)
       } catch (err) {
-        this.error = err
-        this.warningDialog = true
+        this.error = err.message
+        this.dialog = true
         if (err.type === 'PostManagerError') {
           this.removeFromRenderedList(item)
         }
