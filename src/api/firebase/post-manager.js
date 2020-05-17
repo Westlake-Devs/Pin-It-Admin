@@ -25,7 +25,11 @@ async function moveStorageCollectionContent (from, to) {
 export default {
   async fetchPendingPosts () {
     const snapshot = await firebase.firestore().collection(paths.pendingPosts).get()
-    return snapshot.docs.map(doc => doc.data())
+    return snapshot.docs.map(doc => {
+      var dat = doc.data()
+      dat.displayDate = dat.timestamp.toDate().toLocaleString()
+      return dat
+    })
   },
 
   async fetechPostImageURLs (post) {

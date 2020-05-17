@@ -43,12 +43,13 @@
         <br/>
         <v-card flat outlined>
           <v-card-title>
-            Pending Action
+            Pending Action: {{ item.action.toUpperCase() }}
           </v-card-title>
           <v-card-subtitle>
             User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
             The following will become public if approved.
           </v-card-subtitle>
+          <v-divider/>
           <v-card-title>Post Details</v-card-title>
           <v-card-subtitle>
             title: {{ item.title }}<br/>
@@ -59,7 +60,7 @@
           <div v-if="item.action != 'edit'">
             <v-card-title>Post Images</v-card-title>
             <v-card-subtitle>
-              <PostImages :post='item'></PostImages>
+              <PostImages :post="item"></PostImages>
             </v-card-subtitle>
           </div>
         </v-card>
@@ -90,7 +91,7 @@ export default {
         },
         {
           text: 'Date',
-          value: 'timestamp.seconds'
+          value: 'displayDate'
         },
         {
           text: 'Approve',
@@ -116,13 +117,13 @@ export default {
     mapsURL (lat, long) {
       return `https://www.google.com/maps/search/?api=1&query=${lat},${long}`
     },
-    deleteItem (item) {
-      manager.rejectPendingPost(item)
+    async deleteItem (item) {
+      await manager.rejectPendingPost(item)
       const index = this.pendingPosts.indexOf(item)
       this.pendingPosts.splice(index, 1)
     },
-    approve (item) {
-      manager.approvePendingPost(item)
+    async approve (item) {
+      await manager.approvePendingPost(item)
       const index = this.pendingPosts.indexOf(item)
       this.pendingPosts.splice(index, 1)
     }
