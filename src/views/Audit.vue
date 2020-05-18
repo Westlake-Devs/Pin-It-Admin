@@ -29,6 +29,10 @@ export default {
           value: 'title'
         },
         {
+          text: 'Author',
+          value: 'userName'
+        },
+        {
           text: 'Date',
           value: 'displayDate'
         },
@@ -38,7 +42,7 @@ export default {
           sortable: false
         },
         {
-          text: 'Delete',
+          text: 'Reject',
           value: 'delete',
           sortable: false
         }

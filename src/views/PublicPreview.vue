@@ -29,11 +29,15 @@ export default {
           value: 'title'
         },
         {
+          text: 'Author',
+          value: 'userName'
+        },
+        {
           text: 'Date',
           value: 'displayDate'
         },
         {
-          text: 'Delete',
+          text: 'Remove',
           value: 'delete',
           sortable: false
         }
