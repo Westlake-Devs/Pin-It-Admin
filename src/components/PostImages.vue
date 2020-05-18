@@ -25,7 +25,8 @@ import manager from '@/api/firebase/post-manager.js'
 export default {
   name: 'PostImages',
   props: {
-    post: { type: Object, required: true }
+    post: { type: Object, required: true },
+    isPending: { type: Boolean, required: true }
   },
   created () {
     this.previewImagesOf(this.post)
@@ -35,7 +36,7 @@ export default {
   },
   methods: {
     async previewImagesOf (post) {
-      this.urls = await manager.fetechPostImageURLs(post)
+      this.urls = await manager.fetechPostImageURLs(post, this.isPending)
     }
   }
 }

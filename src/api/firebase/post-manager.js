@@ -47,8 +47,9 @@ async function moveStorageCollectionContent (from, to) {
 }
 
 export default {
-  async fetchPendingPosts () {
-    const snapshot = await firebase.firestore().collection(paths.pendingPosts).get()
+  async fetchPosts (isPending = true) {
+    const postsPath = isPending ? paths.pendingPosts : paths.publicPosts
+    const snapshot = await firebase.firestore().collection(postsPath).get()
     return snapshot.docs.map(doc => {
       var dat = doc.data()
       dat.displayDate = dat.timestamp.toDate().toLocaleString()
@@ -56,9 +57,10 @@ export default {
     })
   },
 
-  async fetechPostImageURLs (post) {
+  async fetechPostImageURLs (post, isPending = true) {
     var urls = []
-    const refs = await firebase.storage().ref(`${paths.pendingAttachments}users/${post.owner}/${post.id}`)
+    const prefix = isPending ? paths.pendingAttachments : paths.publicAttachments
+    const refs = await firebase.storage().ref(`${prefix}users/${post.owner}/${post.id}`)
     await (await refs.listAll()).items.forEach(async ref => {
       urls.push(await (ref.getDownloadURL()))
     })
@@ -83,12 +85,24 @@ export default {
         await ref.delete()
       })
     } catch (err) {
+      if (err.type === 'PostManagerError') throw err
       console.log(`Error while deleting post ${post.id}: ${err}`)
     }
   },
 
-  async rejectPublicPost (post) {
-
+  async deletePublicPost (post) {
+    try {
+      const snapshot = await firebase.firestore().doc(`${paths.publicPosts}${post.id}`).get()
+      if (!snapshot.exists) throw PostManagerError('This post no longer exists, it was deleted by another admin or the post\'s author.')
+      await await firebase.firestore().doc(`${paths.publicPosts}${post.id}`).delete()
+      const refs = await firebase.storage().ref(`${paths.publicAttachments}users/${post.owner}/${post.id}`)
+      await (await refs.listAll()).items.forEach(async ref => {
+        await ref.delete()
+      })
+    } catch (err) {
+      if (err.type === 'PostManagerError') throw err
+      console.log(`Error while deleting post ${post.id}: ${err}`)
+    }
   }
 
 }

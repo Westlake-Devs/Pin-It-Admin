@@ -53,7 +53,7 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:item.approve="{ item }">
+      <template v-slot:item.approve="{ item }" v-if="requestApproval">
         <v-icon
           small
           class="mr-2"
@@ -68,7 +68,7 @@
           class="mr-2"
           @click="deleteItem(item)"
         >
-          mdi-trash-can-outline
+          mdi-close
         </v-icon>
       </template>
 
@@ -76,14 +76,16 @@
         <td :colspan="headers.length">
           <br/>
           <v-card flat outlined>
-            <v-card-title>
-              Pending Action: {{ item.action.toUpperCase() }}
-            </v-card-title>
-            <v-card-subtitle>
-              User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
-              The following will become public if approved.
-            </v-card-subtitle>
-            <v-divider/>
+            <div v-if="requestApproval">
+              <v-card-title>
+                Pending Action: {{ item.action.toUpperCase() }}
+              </v-card-title>
+              <v-card-subtitle>
+                User {{ item.userName }} is attempting to {{ item.action }} post {{ item.id }}.<br/>
+                The following will become public if approved.
+              </v-card-subtitle>
+              <v-divider/>
+            </div>
             <v-card-title>Post Details</v-card-title>
             <v-card-subtitle>
               title: {{ item.title }}<br/>
@@ -91,10 +93,10 @@
               description: {{ item.description }}<br/>
               coordinates: <a :href="mapsURL(item.userLat, item.userLong)" target="_blank">({{ item.userLat }}, {{ item.userLong }})</a><br/>
             </v-card-subtitle>
-            <div v-if="item.action != 'edit'">
+            <div v-if="item.action != 'edit' || !requestApproval">
               <v-card-title>Post Images</v-card-title>
               <v-card-subtitle>
-                <post-images :post="item"></post-images>
+                <post-images :post="item" :isPending="requestApproval"></post-images>
               </v-card-subtitle>
             </div>
           </v-card>
@@ -118,7 +120,11 @@ export default {
     title: { type: String, required: true },
     items: { type: Array, required: true },
     loading: { type: Boolean, required: true },
-    error: { type: Error, required: true }
+    error: { type: Error, required: true },
+    requestApproval: { type: Boolean, required: true },
+    headers: { type: Array, required: true }
+  },
+  computed: {
   },
   watch: {
     error: function (err) {
@@ -128,27 +134,7 @@ export default {
   data () {
     return {
       search: null,
-      dialog: false,
-      headers: [
-        {
-          text: 'Title',
-          value: 'title'
-        },
-        {
-          text: 'Date',
-          value: 'displayDate'
-        },
-        {
-          text: 'Approve',
-          value: 'approve',
-          sortable: false
-        },
-        {
-          text: 'Delete',
-          value: 'delete',
-          sortable: false
-        }
-      ]
+      dialog: false
     }
   },
   methods: {

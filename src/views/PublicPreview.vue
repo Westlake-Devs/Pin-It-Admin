@@ -1,10 +1,10 @@
 <template>
   <items-list
-    title = "Pending Posts"
-    :items="pendingPosts"
+    title = "Public Posts"
+    :items="publicPosts"
     :loading="loading"
     :error="error"
-    :requestApproval="true"
+    :requestApproval="false"
     :headers="headers"
     @loadPosts="loadPosts"
     @deleteItem="deleteItem"
@@ -22,7 +22,7 @@ export default {
     return {
       loading: false,
       error: new Error(),
-      pendingPosts: [],
+      publicPosts: [],
       headers: [
         {
           text: 'Title',
@@ -31,11 +31,6 @@ export default {
         {
           text: 'Date',
           value: 'displayDate'
-        },
-        {
-          text: 'Approve',
-          value: 'approve',
-          sortable: false
         },
         {
           text: 'Delete',
@@ -48,12 +43,12 @@ export default {
   methods: {
     async loadPosts () {
       this.loading = true
-      this.pendingPosts = await manager.fetchPosts(true)
+      this.publicPosts = await manager.fetchPosts(false)
       this.loading = false
     },
     removeFromRenderedList (item) {
-      const index = this.pendingPosts.indexOf(item)
-      this.pendingPosts.splice(index, 1)
+      const index = this.publicPosts.indexOf(item)
+      this.publicPosts.splice(index, 1)
     },
     async processItem (item, callback) {
       try {
@@ -69,11 +64,9 @@ export default {
       }
     },
     async deleteItem (item) {
-      await this.processItem(item, manager.rejectPendingPost)
+      await this.processItem(item, manager.deletePublicPost)
     },
-    async approveItem (item) {
-      await this.processItem(item, manager.approvePendingPost)
-    }
+    approveItem (item) {}
   }
 }
 </script>

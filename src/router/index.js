@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Audit from '../views/Audit.vue'
+import PublicPreview from '../views/PublicPreview.vue'
 import store from '@/store'
 
 Vue.use(VueRouter)
@@ -33,6 +34,12 @@ const routes = [
     path: '/auditor',
     name: 'Auditor',
     component: Audit,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/publicpreview',
+    name: 'PublicPreview',
+    component: PublicPreview,
     meta: { requiresAuth: true }
   }
 ]
