@@ -1,8 +1,10 @@
 <template>
   <v-app>
-    <Navbar />
+    <navbar />
     <v-content class="grey lighten-3">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
     </v-content>
   </v-app>
 </template>
@@ -12,7 +14,7 @@ import Navbar from '@/components/Navbar'
 
 export default {
   name: 'App',
-  components: { Navbar },
+  components: { navbar: Navbar },
   data: () => ({
     //
   })
