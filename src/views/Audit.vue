@@ -45,6 +45,16 @@ export default {
       ]
     }
   },
+  computed: {
+    currentUser () {
+      return this.$store.state.currentUser
+    }
+  },
+  watch: {
+    currentUser: function (val) {
+      if (!val) this.pendingPosts = null
+    }
+  },
   methods: {
     async loadPosts () {
       this.loading = true

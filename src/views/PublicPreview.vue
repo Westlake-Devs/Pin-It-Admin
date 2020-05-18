@@ -40,6 +40,16 @@ export default {
       ]
     }
   },
+  computed: {
+    currentUser () {
+      return this.$store.state.currentUser
+    }
+  },
+  watch: {
+    currentUser: function (val) {
+      if (!val) this.publicPosts = null
+    }
+  },
   methods: {
     async loadPosts () {
       this.loading = true
