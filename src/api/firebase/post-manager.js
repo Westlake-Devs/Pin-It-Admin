@@ -1,18 +1,18 @@
 import firebase from 'firebase'
 import paths from './paths'
 
-class PostManagerError extends Error {
-  constructor (message) {
-    super(message)
-    this.type = 'PostManagerError'
-  }
+function PostManagerError (message) {
+  var err = new Error()
+  err.type = 'PostManagerError'
+  err.message = message
+  return err
 }
 
 async function moveFirestoreDoc (from, to) {
   console.log(`move ${from} -> ${to}`)
 
   const snapshot = await firebase.firestore().doc(from).get()
-  if (!snapshot.exists) throw new PostManagerError('This post is no longer pending, it was approved or deleted by another admin.')
+  if (!snapshot.exists) throw PostManagerError('This post is no longer pending, it was approved or deleted by another admin.')
 
   const dat = snapshot.data()
   await firebase.firestore().doc(from).delete()
@@ -24,8 +24,8 @@ async function overwriteFirestoreDoc (from, to) {
 
   const toSnapshot = await firebase.firestore().doc(to).get()
   const fromSnapshot = await firebase.firestore().doc(from).get()
-  if (!toSnapshot.exists) throw new PostManagerError('This edit is no longer pending, the original post has been deleted.')
-  if (!fromSnapshot.exists) throw new PostManagerError('This edit is no longer pending, it was approved or deleted by another admin.')
+  if (!toSnapshot.exists) throw PostManagerError('This edit is no longer pending, the original post has been deleted.')
+  if (!fromSnapshot.exists) throw PostManagerError('This edit is no longer pending, it was approved or deleted by another admin.')
 
   const dat = fromSnapshot.data()
   await firebase.firestore().doc(from).delete()
@@ -76,7 +76,7 @@ export default {
   async rejectPendingPost (post) {
     try {
       const snapshot = await firebase.firestore().doc(`${paths.pendingPosts}${post.id}`).get()
-      if (!snapshot.exists) throw new PostManagerError('This item is no longer pending, it was approved or deleted by another admin.')
+      if (!snapshot.exists) throw PostManagerError('This item is no longer pending, it was approved or deleted by another admin.')
       await await firebase.firestore().doc(`${paths.pendingPosts}${post.id}`).delete()
       const refs = await firebase.storage().ref(`${paths.pendingAttachments}users/${post.owner}/${post.id}`)
       await (await refs.listAll()).items.forEach(async ref => {
