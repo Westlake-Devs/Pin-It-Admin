@@ -71,8 +71,8 @@ export default {
         console.log(res)
 
         console.log('requesting admin permissions')
-        var grantAdminPermissions = functions.httpsCallable('grantAdminPermissions')
-        const permRes = await grantAdminPermissions()
+        var checkAdminPermissions = functions.httpsCallable('checkAdminPermissions')
+        const permRes = await checkAdminPermissions()
         console.log(permRes)
         this.error = null
         this.successSnackbar = true
