@@ -55,8 +55,8 @@ export default {
     }
   },
   watch: {
-    currentUser: function (val) {
-      if (!val) this.pendingPosts = null
+    currentUser: function (val, old) {
+      if (val == null) this.pendingPosts = null
     }
   },
   methods: {

@@ -72,16 +72,20 @@ export default {
 
         console.log('requesting admin permissions')
         var checkAdminPermissions = functions.httpsCallable('checkAdminPermissions')
-        const permRes = await checkAdminPermissions()
+        const permRes = await checkAdminPermissions() // <- this will throw an error if the user is unauthorized
         console.log(permRes)
+        firebase.auth().currentUser.getIdToken(true) // refresh the token to make sure admin claim is present
+
         this.error = null
         this.successSnackbar = true
         this.loggingIn = false
       } catch (err) {
         console.log('error while logging in and requesting permissions')
         console.log(err)
+
         if (err.code.includes('auth')) { return }
         await this.logout()
+
         this.error = err
         this.snackbar = true
       } finally {

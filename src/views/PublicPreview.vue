@@ -50,8 +50,8 @@ export default {
     }
   },
   watch: {
-    currentUser: function (val) {
-      if (!val) this.publicPosts = null
+    currentUser: function (val, old) {
+      if (val == null) this.publicPosts = null
     }
   },
   methods: {

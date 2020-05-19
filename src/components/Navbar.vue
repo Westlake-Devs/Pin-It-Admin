@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     async logout () {
+      this.active_tab = 0
       await firebase.auth().signOut()
       await this.$router.push({ name: 'Login' })
     }

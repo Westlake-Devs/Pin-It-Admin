@@ -11,10 +11,7 @@ firebase.initializeApp(firebaseConfig)
 
 Vue.config.productionTip = false
 
-const onAuthorizationStatusChanged = user => {
-  console.log('onAuthorizationStatusChanged, authorized user is:')
-  console.log(user)
-  store.dispatch('setUser', user)
+const initApp = () => {
   new Vue({
     router,
     store,
@@ -23,20 +20,17 @@ const onAuthorizationStatusChanged = user => {
   }).$mount('#app')
 }
 
-firebase.auth().onAuthStateChanged(async user => {
-  // console.log('Auth state change, user is:')
-  // console.log(user)
-
-  try {
-    // if user is unauthorized, we don't want to do anything
-    const functions = firebase.functions()
-    if (user) await functions.httpsCallable('isAuthorized')()
-    if (user === store.state.currentUser) return
-
-    onAuthorizationStatusChanged(user)
-  } catch (err) {
-    console.log('The user is not authorized to access the audit page')
-    await firebase.auth().signOut()
-    console.log(err)
+firebase.auth().onIdTokenChanged(async (user) => {
+  // console.log(`token refreshed ${JSON.stringify(user)}`)
+  if (user) {
+    const token = await user.getIdTokenResult(false)
+    if (token.claims.admin) { // if user is logged in as admin, reinit app to load in admin panel
+      store.dispatch('setUser', user)
+      initApp()
+    } else store.dispatch('setUser', null)
+  } else {
+    store.dispatch('setUser', null)
   }
 })
+
+initApp()
