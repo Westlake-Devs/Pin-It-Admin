@@ -36,6 +36,7 @@ firebase.auth().onAuthStateChanged(async user => {
     onAuthorizationStatusChanged(user)
   } catch (err) {
     console.log('The user is not authorized to access the audit page')
+    await firebase.auth().signOut()
     console.log(err)
   }
 })
